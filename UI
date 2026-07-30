@@ -1,0 +1,71 @@
+-- โหลด Rayfield UI Library
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- สร้าง Window หลัก
+local Window = Rayfield:CreateWindow({
+   Name = "Auto Buy System",
+   LoadingTitle = "Loading Auto Buy...",
+   LoadingSubtitle = "by Assistant",
+   ConfigurationSaving = { Enabled = false },
+   Discord = { Enabled = false },
+   KeySystem = false
+})
+
+-- สร้าง Tab สำหรับเมนู
+local MainTab = Window:CreateTab("Auto Buy", 4483362458) -- Icon ID
+
+-- ตัวแปรเก็บสถานะเปิด/ปิด
+local autoBuySeed = false
+local autoBuyBooster = false
+
+-- สร้าง Toggle สำหรับ Auto Buy Lava Fungus Seed
+MainTab:CreateToggle({
+   Name = "Auto Buy Lava Fungus Seed",
+   CurrentValue = false,
+   Flag = "Toggle_Seed",
+   Callback = function(Value)
+      autoBuySeed = Value
+      if autoBuySeed then
+         task.spawn(function()
+            while autoBuySeed do
+               local args = {
+                  "Lava Fungus Seed",
+                  0
+               }
+               game:GetService("ReplicatedStorage"):WaitForChild("BuySeedRequest"):FireServer(unpack(args))
+               task.wait(0.5) -- หน่วงเวลา 0.5 วินาทีต่อการส่ง 1 ครั้ง (ปรับได้ตามต้องการ)
+            end
+         end)
+      end
+   end,
+})
+
+-- สร้าง Toggle สำหรับ Auto Buy Growth Booster
+MainTab:CreateToggle({
+   Name = "Auto Buy Growth Booster",
+   CurrentValue = false,
+   Flag = "Toggle_Booster",
+   Callback = function(Value)
+      autoBuyBooster = Value
+      if autoBuyBooster then
+         task.spawn(function()
+            while autoBuyBooster do
+               local args = {
+                  "Growth Booster",
+                  0
+               }
+               game:GetService("ReplicatedStorage"):WaitForChild("BuyBoosterRequest"):FireServer(unpack(args))
+               task.wait(0.5) -- หน่วงเวลา 0.5 วินาทีต่อการส่ง 1 ครั้ง (ปรับได้ตามต้องการ)
+            end
+         end)
+      end
+   end,
+})
+
+-- แจ้งเตือนเมื่อโหลดสำเร็จ
+Rayfield:Notify({
+   Title = "System Loaded",
+   Content = "Auto Buy Script is ready to use!",
+   Duration = 3,
+   Image = 4483362458,
+})
